@@ -27,13 +27,14 @@ def create_blueprint(
     def get_sensor_value(sensor_name):
         try:
             session: Session = sessionmaker()
-            sensor_db_object = session.query(Model.Sensor).filter(Model.Sensor.sensor_name==sensor_name).one()
+            sensor_db_object: Model.Sensor = session.query(Model.Sensor).filter(Model.Sensor.sensor_name==sensor_name).one()
             session.close()
             sensor_data = {
-                "metadata": jsonify(sensor_db_object), # replace with serialized database object
-                "state": redis_interface.get_sensor_current_state(),
+                "metadata": sensor_db_object, # replace with serialized database object
+                "state": redis_interface.get_sensor_current_state(sensor_name),
                 "data": redis_interface.get_sensor_data_values(sensor_name)
             }
+            print(sensor_data)
             return {
                 "data": sensor_data
             }

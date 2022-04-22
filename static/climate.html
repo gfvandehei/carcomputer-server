@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+    <style source="climate.css"></style>
+</head>
+<body>
+    <div class="exterior-sensor-container">
+        <h3>Exterior Climate</h3>
+        <div id="exterior-temperature"></div>
+        <div id="exterior-humidity"></div>
+    </div>
+</body>
+<footer>
+    <script>
+        let extemp = document.querySelector("#exterior-temperature");
+        let exhum = document.querySelector("#exterior-humidity");
+        setInterval(async () => {
+            let exteriorInfo = await fetch("/sensors/test_climate_frontbump")
+            let asJson = await exteriorInfo.json();
+            console.log(asJson);
+            extemp.innerHTML = `
+                Temp: ${asJson.data.data[0].data.temperature}
+            `;
+            exhum.innerHTML = `
+                Humidity: ${asJson.data.data[0].data.humidity}
+            `;
+        }, 1000)
+    </script>
+</footer>

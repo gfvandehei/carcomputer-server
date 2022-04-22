@@ -2,6 +2,12 @@ import redis
 import datetime
 from carcomputerServerPypack.settings.carcompsettings import CarcomputerServerSettings
 
+def nobytestring(value):
+    if isinstance(value, bytes):
+        return value.decode("utf-8")
+    else:
+        return value
+
 class CarComputerRedisInterface(redis.Redis):
 
     def __init__(self, carcomp_settings: CarcomputerServerSettings):
@@ -22,14 +28,14 @@ class CarComputerRedisInterface(redis.Redis):
         return names
     
     def get_sensor_data_values(self, sensor_name, how_many=100):
-        sensor_data = self.xrange(f"sensor:{sensor_name}:log", count=how_many)
+        sensor_data = self.xrevrange(f"sensor:{sensor_name}:log", count=how_many)
         sensor_data_parsed = []
         for data_point in sensor_data:
             # parse the sensor data
             timestamp_str = int(data_point[0].decode("utf-8").split("-")[0])
             timestamp = datetime.datetime.fromtimestamp(timestamp_str/1000) # converts from ms to s
             data_dict: dict = data_point[1]
-            data_nobytekeys = {key.decode(): value for key, value in data_dict.items()}
+            data_nobytekeys = {key.decode(): nobytestring(value) for key, value in data_dict.items()}
             sensor_data_parsed.append({
                 "timestamp": timestamp,
                 "data": data_nobytekeys
@@ -44,7 +50,7 @@ class CarComputerRedisInterface(redis.Redis):
             timestamp_str = int(data_point[0].decode("utf-8").split("-")[0])
             timestamp = datetime.datetime.fromtimestamp(timestamp_str/1000) # converts from ms to s
             data_dict: dict = data_point[1]
-            data_nobytekeys = {key.decode(): value for key, value in data_dict.items()}
+            data_nobytekeys = {key.decode(): nobytestring(value) for key, value in data_dict.items()}
             sensor_data_parsed.append({
                 "timestamp": timestamp,
                 "state": data_nobytekeys
@@ -53,13 +59,16 @@ class CarComputerRedisInterface(redis.Redis):
     
     def get_sensor_current_state(self, sensor_name):
         sensor_data = self.xrevrange(f"sensor:{sensor_name}:state", count=1)
-        data_point = sensor_data[0]
-        timestamp_str = int(data_point[0].decode("utf-8").split("-")[0])
-        timestamp = datetime.datetime.fromtimestamp(timestamp_str/1000) # converts from ms to s
-        data_dict: dict = data_point[1]
-        data_nobytekeys = {key.decode(): value for key, value in data_dict.items()}
-        return {
-            "timestamp": timestamp,
-            "state": data_nobytekeys
-        }
-    
+        try:
+            data_point = sensor_data[0]
+            timestamp_str = int(data_point[0].decode("utf-8").split("-")[0])
+            timestamp = datetime.datetime.fromtimestamp(timestamp_str/1000) # converts from ms to s
+            data_dict: dict = data_point[1]
+            
+            data_nobytekeys = {key.decode(): nobytestring(value) for key, value in data_dict.items()}
+            return {
+                "timestamp": timestamp,
+                "state": data_nobytekeys
+            }
+        except Exception as err:
+            return str(err)
