@@ -1,0 +1,15 @@
+.app-tile-container{
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+.app-tile{
+    height: 200px;
+    width: 200px;
+    display: block;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}

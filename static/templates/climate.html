@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+
+{% block pagetitle %}
+Climate
+{% endblock %}
+
+{% block content %}
+<link href="/css/climate.css" rel="stylesheet">
+<div class="climate-display-area">
+    <div id="interior-climate" class="climate-container">
+        <div class="climate-container-title">
+            <div class="climate-container-title-symbol"></div>
+            <div class="climate-container-title-text">Interior</div>
+        </div>
+        <div class="climate-data-display">
+            <div id="interior-temperature" class="temperature-display"></div>
+            <div id="interior-humidity" class="humidity-display"></div>
+        </div>
+        <canvas id="interiorChart" class="climate-data-graph">
+            
+        </canvas>
+    </div>
+    <div id="exterior-climate" class="climate-container">
+        <div class="climate-container-title">
+            <div class="climate-container-title-symbol"></div>
+            <div class="climate-container-title-text">Exterior</div>
+        </div>
+        <div class="climate-data-display">
+            <div id="exterior-temperature" class="temperature-display"></div>
+            <div id="exterior-humidity" class="humidity-display"></div>
+        </div>
+        <canvas id="exteriorChart" class="climate-data-graph">
+            
+        </canvas>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script src="/js/climateFunctions.js"></script>
+<script>
+    initializeCharts();
+    let inTemp = document.getElementById("interior-temperature");
+    //document.querySelector("#interior-temperature");
+    let inHum = document.getElementById("interior-humidity");
+    let outTemp = document.getElementById("exterior-temperature");
+    let outHum = document.getElementById("exterior-humidity");
+    //fetch the sensor data
+    setInterval(() => {
+        //get interior data
+        fetch("/sensors/interior-climate").then(async (result) => {
+            let asjson = await result.json();
+            //console.log(data);
+            inTemp.innerHTML = asjson['data']['data'][0]['data']['temperature']+"&deg";//data.data[0].data.temperature;
+            inHum.innerHTML =  asjson['data']['data'][0]['data']['humidity']+ "&#37";//data.data[0].data.humidity+" &percent";
+            updateInteriorChart(asjson['data']['data']);
+        });
+        //get exterior data
+        fetch("/sensors/exterior-climate").then(async (result) => {
+            let asjson = await result.json();
+            outTemp.innerHTML = asjson['data']['data'][0]['data']['temperature']+"&deg";//data.data[0].data.temperature;
+            outHum.innerHTML = asjson['data']['data'][0]['data']['humidity']+ "&#37";//data.data[0].data.humidity;
+            updateExteriorChart(asjson['data']['data']);
+        })
+    }, 1000)
+</script>
+{% endblock %}

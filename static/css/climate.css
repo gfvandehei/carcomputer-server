@@ -1,0 +1,61 @@
+.climate-display-area{
+    display: grid;
+    grid: 
+        'interior-climate exterior-climate';
+    column-gap: 10px;
+}
+
+#interior-climate{
+    grid-area: interior-climate;
+}
+
+#exterior-climate{
+    grid-area: exterior-climate;
+}
+
+.climate-container{
+    justify-content: center;
+    display: grid;
+    grid:
+    'header header header header'
+    'text text text text'
+    'text text text text'
+    'graph graph graph graph'
+    'graph graph graph graph'
+    'graph graph graph graph'
+    'graph graph graph graph';
+}
+
+.climate-container-title{
+    grid-area: header;
+    text-align: center;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.climate-data-display{
+    grid-area: text;
+}
+
+.climate-data-graph{
+    grid-area: graph;
+}
+
+.climate-data-display{
+    display: grid;
+    grid:
+    'temp hum';
+    column-gap: 10px;
+}
+
+.temperature-display{
+    grid-area: temp;
+    text-align: center;
+    font-weight: bolder;
+}
+
+.humidity-display{
+    grid-area: hum;
+    text-align: center;
+    font-weight: bolder;
+}

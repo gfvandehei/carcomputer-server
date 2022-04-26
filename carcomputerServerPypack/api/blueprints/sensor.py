@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, Response
+from typing import List
 from carcomputerServerPypack.redis.redisInterface import CarComputerRedisInterface
 import carcomputerServerPypack.database.model as Model
 from sqlalchemy.orm import sessionmaker, Session
@@ -39,6 +40,7 @@ def create_blueprint(
                 "data": sensor_data
             }
         except Exception as err:
+            print(err)
             return Response(str(err), 404)
 
     return sensor_blueprint

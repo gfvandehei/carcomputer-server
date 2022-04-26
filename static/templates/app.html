@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block pagetitle %}
+Applications
+{% endblock %}
+
+{% block content %}
+<link href="/css/app.css" rel="stylesheet">
+<div class="app-tile-container">
+    <a class="app-tile" href="/climate">
+        <div class="app-tile-title">Climate</div>
+    </a>
+    <a class="app-tile" href="/pages/location">
+        <div class="app-tile-title">Location</div>
+    </a>
+    <a class="app-tile" href="/pages/proximity">
+        <div class="app-tile-title">Proximity</div>
+    </a>
+    <a class="app-tile" href="/pages/gauges">
+        <div class="app-tile-title">Gauges</div>
+    </a>
+    <a class="app-tile" href="/pages/switches">
+        <div class="app-tile-title">Switches</div>
+    </a>
+    <a class="app-tile" href="/pages/lights">
+        <div class="app-tile-title">Lights</div>
+    </a>
+    <a class="app-tile" href="/pages/gyro">
+        <div class="app-tile-title">Gyro</div>
+    </a>
+</div>
+{% endblock %}

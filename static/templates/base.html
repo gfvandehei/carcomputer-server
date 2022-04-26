@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CarComputer</title>
+        <link href="/css/base.css" rel="stylesheet">
+        <script src="/libs/chartjs/dist/chart.js"></script>
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        <div class="titlebar">
+            <a id="navbar-home" href="/" class="navbar-button">Home</a>
+            <div class="flex-stretch"></div>
+            <div class="page-title">
+                {% block pagetitle %}{% endblock %}
+            </div>
+            <div class="flex-stretch"></div>
+            <a id="navbar-back" onclick="goBack()" class="navbar-button">Back</a>
+        </div>
+        <div class="content-top-flex">
+            <div class="content-spacer"></div>
+            <div class="content-container">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        <script>
+            function goBack(){
+                const currentURL = window.location;
+                console.log(currentURL);
+                let urlList = currentURL.href.split("/");
+                console.log(urlList);
+                if(urlList[-1] == "" || urlList.length == 3){
+                    //we are already at home do nothin
+                    return;
+                } else{
+                    let l = new Array();
+                    let newUrlList = urlList.splice(0, urlList.length-1);
+                    let newLocation = newUrlList.join("/");
+                    window.location = newLocation;
+                    return;
+                }
+            }
+        </script>
+    </body>
+    <footer>
+        {% block footer %} {% endblock %}
+    </footer>
+</html>
