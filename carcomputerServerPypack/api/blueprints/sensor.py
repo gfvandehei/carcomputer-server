@@ -18,10 +18,11 @@ def create_blueprint(
         sensors = session.query(Model.Sensor).all()
         session.close()
         print(sensors)
+        sensors_dict = list(map(lambda x: Model.SensorModel.from_orm(x).json(), sensors))
         # query params type=?, position=?
         # return all json objects for sensors, not including values
         return {
-            "data": sensors
+            "data": sensors_dict
         }
 
     @sensor_blueprint.route("/<sensor_name>")
